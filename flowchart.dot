@@ -1,0 +1,50 @@
+Graphviz DOT Code
+
+digraph ATM_System {
+    node [fontname="Arial", fontsize=10;
+
+    // Node Definitions
+    Start [shape=oval, label="START"];
+    End [shape=oval, label="END"];
+    
+    ReadPin [shape=parallelogram, label="READ user_pin"];
+    ReadAmount [shape=parallelogram, label="READ amount_requested"];
+    ReadChoice [shape=parallelogram, label="READ user_choice"];
+    PrintReceipt [shape=parallelogram, label="PRINT Cash & Receipt"];
+    
+    CheckPin [shape=diamond, label="PIN Correct?"];
+    CheckTries [shape=diamond, label="Tries >= 3?"];
+    Check20TL [shape=diamond, label="Multiple of 20?"];
+    CheckBalance [shape=diamond, label="Sufficient Balance?"];
+    CheckLimit [shape=diamond, label="Under Daily Limit?"];
+    AnotherTrans [shape=diamond, label="Another Transaction?"];
+    
+    BlockCard [shape=box, label="Block Card"];
+    UpdateValues [shape=box, label="Update Balance &\nDaily Total"];
+
+    // Connections
+    Start -> ReadPin;
+    ReadPin -> CheckPin;
+    
+    CheckPin -> CheckTries [label="No"];
+    CheckPin -> Check20TL [label="Yes"];
+    
+    CheckTries -> BlockCard [label="Yes"];
+    CheckTries -> ReadPin [label="No"];
+    BlockCard -> End;
+    
+    Check20TL -> ReadAmount [label="No"];
+    Check20TL -> CheckBalance [label="Yes"];
+    
+    CheckBalance -> ReadAmount [label="No"];
+    CheckBalance -> CheckLimit [label="Yes"];
+    
+    CheckLimit -> ReadAmount [label="No"];
+    CheckLimit -> UpdateValues [label="Yes"];
+    
+    UpdateValues -> PrintReceipt;
+    PrintReceipt -> AnotherTrans;
+    
+    AnotherTrans -> Check20TL [label="Yes"];
+    AnotherTrans -> End [label="No"];
+}
