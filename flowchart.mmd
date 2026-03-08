@@ -1,0 +1,26 @@
+graph TD
+    Start([START]) --> GetPIN[/READ user_pin/]
+    GetPIN --> IsPinOk{PIN Correct?}
+    
+    IsPinOk -- No --> TriesLeft{Tries >= 3?}
+    TriesLeft -- Yes --> Block[Block Card]
+    Block --> Fin([END])
+    TriesLeft -- No --> GetPIN
+    
+    IsPinOk -- Yes --> GetAmt[/READ amount_requested/]
+    GetAmt --> Is20{Multiple of 20?}
+    
+    Is20 -- No --> GetAmt
+    Is20 -- Yes --> HasCash{Sufficient Balance?}
+    
+    HasCash -- No --> GetAmt
+    HasCash -- Yes --> LimitOk{Under Daily Limit?}
+    
+    LimitOk -- No --> GetAmt
+    LimitOk -- Yes --> Process[Update Balance & Daily Total]
+    
+    Process --> Dispense[/PRINT Cash & Receipt/]
+    Dispense --> Again{Another Transaction?}
+    
+    Again -- Yes --> GetAmt
+    Again -- No --> Fin
